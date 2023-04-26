@@ -24,6 +24,13 @@
             <artifactId>jeecg-module-demo</artifactId>
             <version>${jeecgboot.version}</version>
         </dependency>
+        <!-- CMS 模块 -->
+        <dependency>
+<!--            <groupId>org.jeecgframework.boot</groupId>-->
+            <groupId>com.cclotus.cms</groupId>
+            <artifactId>jeecg-module-cms</artifactId>
+            <version>3.5.1</version>
+        </dependency>
     </dependencies>
 
     <build>

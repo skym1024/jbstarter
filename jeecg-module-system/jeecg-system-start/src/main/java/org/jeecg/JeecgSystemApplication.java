@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 import java.net.InetAddress;
@@ -18,6 +19,7 @@ import java.net.UnknownHostException;
 */
 @Slf4j
 @SpringBootApplication
+@ComponentScan(basePackages = {"org.jeecg", "com.cclotus"})
 //@EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
 public class JeecgSystemApplication extends SpringBootServletInitializer {
 
