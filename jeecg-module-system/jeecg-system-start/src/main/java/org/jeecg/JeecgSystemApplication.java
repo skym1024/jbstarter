@@ -19,7 +19,13 @@ import java.net.UnknownHostException;
 */
 @Slf4j
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.jeecg", "com.cclotus"})
+@ComponentScan(
+        basePackages = {
+                "org.jeecg",
+                "com.cclotus.cms.common",
+                "com.cclotus.cms.admin"
+        }
+)
 //@EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
 public class JeecgSystemApplication extends SpringBootServletInitializer {
 
