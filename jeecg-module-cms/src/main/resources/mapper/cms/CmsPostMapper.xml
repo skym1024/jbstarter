@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cclotus.cms.common.mapper.CmsPostMapper">
+
+    <resultMap type="com.cclotus.cms.common.domain.CmsPost" id="CmsPost">
+        <result property="postId" column="post_id"/>
+        <result property="title" column="title"/>
+        <result property="image" column="image"/>
+        <result property="summary" column="summary"/>
+        <result property="contentType" column="content_type"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="topStatus" column="top_status"/>
+        <result property="visible" column="visible"/>
+        <result property="alias" column="alias"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <collection property="catalogs" javaType="java.util.List" resultMap="CmsTerm"/>
+        <collection property="meta" javaType="java.util.List" resultMap="CmsPostMeta"/>
+    </resultMap>
+
+    <resultMap id="CmsTerm" type="com.cclotus.cms.common.domain.CmsTerm">
+        <result property="termId"   column="t_term_id"/>
+        <result property="parentId" column="t_parent_id"/>
+        <result property="name"     column="t_name"/>
+        <result property="alias"    column="t_alias"/>
+        <result property="description" column="t_description"/>
+        <result property="image"    column="t_image"/>
+        <result property="taxonomy" column="t_taxonomy"/>
+        <result property="type"     column="t_type"/>
+        <result property="number"   column="t_number"/>
+    </resultMap>
+
+    <resultMap id="CmsPostMeta" type="com.cclotus.cms.common.domain.CmsPostMeta">
+        <result property="metaId" column="meta_id"/>
+        <result property="metaKey" column="meta_key"/>
+        <result property="metaValue" column="meta_value"/>
+    </resultMap>
+
+    <select id="selectPostByPostId" resultMap="CmsPost">
+        select p.*,
+               t.term_id    as t_term_id,
+               t.parent_id  as t_parent_id,
+               t.name       as t_name,
+               t.alias      as t_alias,
+               t.description  as t_description,
+               t.image      as t_image,
+               t.taxonomy   as t_taxonomy,
+               t.type       as t_type,
+               t.number     as t_number,
+               e.meta_key,
+               e.meta_value
+        FROM cms_post p
+                LEFT JOIN cms_term_relationships r ON p.post_id = r.object_id
+                LEFT JOIN cms_term t on r.term_id = t.term_id
+                LEFT JOIN cms_post_meta e on p.post_id = e.post_id
+        where p.post_id = #{postId} and p.content_type = #{contentType}
+    </select>
+
+    <select id="selectPostByAlias" resultMap="CmsPost">
+        select p.*,
+               t.term_id    as t_term_id,
+               t.parent_id  as t_parent_id,
+               t.name       as t_name,
+               t.alias      as t_alias,
+               t.description  as t_description,
+               t.image      as t_image,
+               t.taxonomy   as t_taxonomy,
+               t.type       as t_type,
+               t.number     as t_number,
+               e.meta_key,
+               e.meta_value
+        FROM cms_post p
+                LEFT JOIN cms_term_relationships r ON p.post_id = r.object_id
+                LEFT JOIN cms_term t on r.term_id = t.term_id
+                LEFT JOIN cms_post_meta e on p.post_id = e.post_id
+        where p.alias = #{alias} and p.content_type = #{contentType}
+    </select>
+
+    <select id="selectPostEx" resultMap="CmsPost">
+        select p.*,
+            t.term_id    as t_term_id,
+            t.parent_id  as t_parent_id,
+            t.name       as t_name,
+            t.alias      as t_alias,
+            t.description  as t_description,
+            t.image      as t_image,
+            t.taxonomy   as t_taxonomy,
+            t.type       as t_type,
+            t.number     as t_number,
+            e.meta_key,
+            e.meta_value
+        FROM cms_post p
+            LEFT JOIN cms_term_relationships r ON p.post_id = r.object_id
+            LEFT JOIN cms_term t on r.term_id = t.term_id
+            LEFT JOIN cms_post_meta e on p.post_id = e.post_id
+        <where>
+            <if test="catalogAlias != null and catalogAlias != ''">
+                AND t.alias = #{catalogAlias}
+            </if>
+            <if test="postType != null and postType != ''">
+                AND p.content_type = #{postType}
+            </if>
+            <if test="postId != null and postId != ''">
+                AND p.post_id = #{postId}
+            </if>
+            <if test="postAlias != null and postAlias != ''">
+                AND p.alias = #{postAlias}
+            </if>
+        </where>
+    </select>
+
+</mapper>

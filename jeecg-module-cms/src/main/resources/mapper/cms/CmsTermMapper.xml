@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cclotus.cms.common.mapper.CmsTermMapper">
+
+    <resultMap id="CmsTerm" type="com.cclotus.cms.common.domain.CmsTerm">
+        <result property="termId" column="term_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="ancestors" column="ancestors"/>
+        <result property="name" column="name"/>
+        <result property="alias" column="alias"/>
+        <result property="description" column="description"/>
+        <result property="image" column="image"/>
+        <result property="taxonomy" column="taxonomy"/>
+        <result property="type" column="type"/>
+        <result property="number" column="number"/>
+        <collection property="meta" javaType="java.util.List" resultMap="CmsTermMeta"/>
+    </resultMap>
+
+    <resultMap id="CmsTermMeta" type="com.cclotus.cms.common.domain.CmsTermMeta">
+        <result property="metaId" column="meta_id"/>
+        <result property="metaKey" column="meta_key"/>
+        <result property="metaValue" column="meta_value"/>
+    </resultMap>
+
+    <select id="selectOneWithMetas" resultMap="CmsTerm">
+        select t.*, m.meta_id, m.meta_key, m.meta_value
+        from cms_term t
+        left join cms_term_meta m on t.term_id = m.term_id
+        <where>
+            <if test="taxonomy != null and taxonomy != ''">
+                and t.taxonomy = #{taxonomy}
+            </if>
+            <if test="alias != null and alias != ''">
+                and t.alias = #{alias}
+            </if>
+            <if test="termId != null">
+                and t.term_id = #{termId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectChildrenById" resultMap="CmsTerm">
+        select * from cms_term where find_in_set(#{termId}, ancestors)
+    </select>
+
+</mapper>
